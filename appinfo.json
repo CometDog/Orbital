@@ -1,0 +1,51 @@
+{
+    "appKeys": {},
+    "capabilities": [
+        ""
+    ],
+    "companyName": "James Downs",
+    "longName": "Orbital",
+    "projectType": "native",
+    "resources": {
+        "media": [
+            {
+                "file": "images/iconbw.png",
+                "menuIcon": true,
+                "name": "ICON",
+                "type": "png"
+            },
+            {
+                "file": "images/black.png",
+                "name": "BACKGROUND",
+                "type": "png"
+            },
+            {
+                "file": "fonts/OpenSans-Regular.ttf",
+                "name": "OPEN_SANS_15",
+                "type": "font"
+            },
+            {
+                "file": "fonts/OpenSans-Semibold.ttf",
+                "name": "OPEN_SANS_20",
+                "type": "font"
+            },
+            {
+                "file": "fonts/OpenSans-Semibold.ttf",
+                "name": "OPEN_SANS_50",
+                "type": "font"
+            }
+        ]
+    },
+    "sdkVersion": "3",
+    "shortName": "Orbital",
+    "targetPlatforms": [
+        "aplite",
+        "basalt"
+    ],
+    "uuid": "6e5d44de-e993-4ef7-a23a-ba65bebb3875",
+    "versionCode": 1,
+    "versionLabel": "1.0",
+    "watchapp": {
+        "watchface": true
+    }
+}
