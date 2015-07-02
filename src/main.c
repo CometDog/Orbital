@@ -2,6 +2,7 @@
 #ifdef PBL_PLATFORM_BASALT // Only use this for 3.0+
   #include "gcolor_definitions.h" // Allows the use of colors
 #endif
+#include "libs/pebble-assist.h"
 
 static Window *s_main_window; // Full window
   
@@ -13,8 +14,6 @@ static TextLayer *s_date_label; // Date label
 static char s_hour_buffer[3]; // Hour buffer
 static char s_minute_buffer[3]; // Minute buffer
 static char s_date_buffer[] = "XXX XXX XX"; // Date buffer
-
-static GFont *s_date_font; // Date font
 
 // Makes text uppercase when called
 char *upcase(char *str)
@@ -52,16 +51,27 @@ static void hands_update_proc(Layer *layer, GContext *ctx) {
   
   strftime(s_hour_buffer, sizeof(s_hour_buffer), "%H", t); // Set hour_buffer to hour
   strftime(s_minute_buffer, sizeof(s_minute_buffer), "%M", t); // Set minute_buffer to minute
+  
+  #ifdef PBL_COLOR
+    graphics_context_set_stroke_color(ctx, GColorWhite);
+    graphics_context_set_stroke_width(ctx, 5);
+    graphics_draw_circle(ctx, GPoint(72,81), 40);
+  #else
+    graphics_context_set_fill_color(ctx, GColorWhite);
+    graphics_fill_circle(ctx, GPoint(72,81), 40);
+    graphics_context_set_fill_color(ctx, GColorBlack);
+    graphics_fill_circle(ctx, GPoint(72,81), 35);
+  #endif
 
   graphics_context_set_text_color(ctx, GColorWhite); // Set text color to white
   
   graphics_draw_text(ctx, s_minute_buffer, 
-                     fonts_load_custom_font(resource_get_handle(RESOURCE_ID_OPEN_SANS_20)), 
+                     fonts_get_system_font(FONT_KEY_GOTHIC_24_BOLD), 
                      GRect(minX - 20, minY -15, 40, 40), 
                      GTextOverflowModeTrailingEllipsis, GTextAlignmentCenter, NULL); // Draw the minute
 
   graphics_draw_text(ctx, s_hour_buffer, 
-                     fonts_load_custom_font(resource_get_handle(RESOURCE_ID_OPEN_SANS_50)), 
+                     fonts_get_system_font(FONT_KEY_BITHAM_42_BOLD),
                      GRect(center.x - 30, center.y - 31, 60, 60), GTextOverflowModeTrailingEllipsis, 
                      GTextAlignmentCenter, NULL); // Draw the hour
   
@@ -88,9 +98,7 @@ static void window_load(Window *window) {
   Layer *window_layer = window_get_root_layer(window); // Create main layer
   GRect bounds = layer_get_bounds(window_layer); // Set bounds for main layer to full screen
   
-  s_date_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_OPEN_SANS_15)); // Create date font
-  
-  s_background_bitmap = gbitmap_create_with_resource(RESOURCE_ID_BACKGROUND); // Set the background face bitmap resource
+  window_set_background_color(window, GColorBlack);
   
   s_background_layer = bitmap_layer_create(bounds); // Create face layer
   s_date_layer = layer_create(bounds); // Create date layer
@@ -102,12 +110,15 @@ static void window_load(Window *window) {
   s_date_label = text_layer_create(GRect(0, 149, 144, 90)); // Create day label
   text_layer_set_text_color(s_date_label, GColorWhite); // Set black and white for date number label
   text_layer_set_background_color(s_date_label, GColorClear); // Set background to transparent
-  text_layer_set_font(s_date_label, s_date_font); // Set day font
+  text_layer_set_system_font(s_date_label, FONT_KEY_GOTHIC_18_BOLD); // Set day font
   text_layer_set_text_alignment(s_date_label, GTextAlignmentCenter); // Center day label
   
-  bitmap_layer_set_bitmap(s_background_layer, s_background_bitmap); // Apply face bitmap to face layer
+  #ifdef PBL_COLOR
+    s_background_bitmap = gbitmap_create_with_resource(RESOURCE_ID_BACKGROUND); // Set the background face bitmap resource
+    bitmap_layer_set_bitmap(s_background_layer, s_background_bitmap); // Apply face bitmap to face layer
+    layer_add_child(window_layer, bitmap_layer_get_layer(s_background_layer)); // Add background to main layer
+  #endif
   
-  layer_add_child(window_layer, bitmap_layer_get_layer(s_background_layer)); // Add background to main layer
   layer_add_child(window_layer, s_hands_layer); // Add hands layer to main layer
   layer_add_child(window_layer, s_date_layer); // Add date layer to main layer
   layer_add_child(s_date_layer, text_layer_get_layer(s_date_label)); // Add date label to to date layer
@@ -121,8 +132,6 @@ static void window_unload(Window *window) {
   gbitmap_destroy(s_background_bitmap); // Destroy face bitmap
   
   text_layer_destroy(s_date_label); // Destroy day label 
-  
-  fonts_unload_custom_font(s_date_font); // Unload date font
 }
 
 static void init(void) {

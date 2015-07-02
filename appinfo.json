@@ -15,24 +15,9 @@
                 "type": "png"
             },
             {
-                "file": "images/black.png",
+                "file": "images/BACKGROUND.png",
                 "name": "BACKGROUND",
                 "type": "png"
-            },
-            {
-                "file": "fonts/OpenSans-Regular.ttf",
-                "name": "OPEN_SANS_15",
-                "type": "font"
-            },
-            {
-                "file": "fonts/OpenSans-Semibold.ttf",
-                "name": "OPEN_SANS_20",
-                "type": "font"
-            },
-            {
-                "file": "fonts/OpenSans-Semibold.ttf",
-                "name": "OPEN_SANS_50",
-                "type": "font"
             }
         ]
     },
@@ -44,7 +29,7 @@
     ],
     "uuid": "6e5d44de-e993-4ef7-a23a-ba65bebb3875",
     "versionCode": 1,
-    "versionLabel": "1.0",
+    "versionLabel": "1.1",
     "watchapp": {
         "watchface": true
     }
